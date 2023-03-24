@@ -1,32 +1,40 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useApiService } from './services/apiServices';
+import ItemComponent from './components/ItemComponent.vue';
+import SearchComponent from './components/SearchComponent.vue';
 import type { fetchWikipedia } from './types/fetchWikipedia';
-
-const inputSearch = ref('');
 const wikipedias = ref<fetchWikipedia[]>([]);
 
-const apiService = useApiService();
-
-const handleSubmit = async () => {
-  const data = await apiService.fetchSearch(inputSearch.value);
-  wikipedias.value = data;
+const setWikipedias = (value: fetchWikipedia[]) => {
+  wikipedias.value = value;
 };
 </script>
 
 <template>
-  <h2>Hello world</h2>
-  <form @submit.prevent="handleSubmit">
-    <input type="text" v-model="inputSearch" placeholder="Buscar..." />
-    <button type="button"></button>
-  </form>
-  <div v-if="wikipedias.length !== 0">
-    <div v-for="wikipedia in wikipedias" :key="wikipedia.pageid">
-      <span>{{ wikipedia.pageid }}</span>
-      <span>{{ wikipedia.title }}</span>
-      <div v-html="wikipedia.snippet"></div>
+  <div class="max__content">
+    <div class="content">
+      <h2 class="title">Wikipedia</h2>
+      <SearchComponent :setWikipedias="setWikipedias" />
+      <div v-if="wikipedias.length !== 0" class="content__list">
+        <ItemComponent
+          v-for="wikipedia in wikipedias"
+          :key="wikipedia.pageid"
+          :wiki="wikipedia"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title {
+  color: #333;
+  margin: 1rem 0 1rem 0;
+  text-align: center;
+}
+.content__list {
+  overflow: auto;
+  scrollbar-width: thin;
+  height: 30rem;
+}
+</style>

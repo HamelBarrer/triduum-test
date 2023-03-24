@@ -11,3 +11,30 @@
   border: none;
   cursor: default;
 }
+
+body {
+  font-family: gg sans, Noto Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+  background-color: #1f2a46;
+  color: #fff;
+  overflow: hidden;
+}
+
+.max__content {
+  display: grid;
+  place-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.content {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  width: 20rem;
+}
+
+@media (min-width: 720px) {
+  .content {
+    width: 40rem;
+  }
+}
