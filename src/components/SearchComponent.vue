@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { useApiService } from '@/services/apiServices';
-import { ref } from 'vue';
+import { inject, ref, watchEffect } from 'vue';
+
+const getHistoryLocalStorage = inject<Function>('getHistoryLocalStorage');
 
 const props = defineProps({
   setWikipedias: { type: Function, required: true },
 });
 
-const apiService = useApiService();
+const textElement = inject<string>('textElement') as string;
 
-const inputSearch = ref('');
+const apiService = useApiService();
+const inputSearch = ref(textElement !== '' ? textElement : '');
 
 const handleSubmit = async () => {
+  if (inputSearch.value.trim() === '') return;
+
   const data = await apiService.fetchSearch(inputSearch.value);
   props.setWikipedias(data);
 
@@ -21,6 +26,9 @@ const handleSubmit = async () => {
   localStorage.setItem('histories', JSON.stringify(history));
 
   inputSearch.value = '';
+  if (getHistoryLocalStorage) {
+    getHistoryLocalStorage();
+  }
 };
 </script>
 

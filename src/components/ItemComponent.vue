@@ -34,6 +34,7 @@ const props = defineProps({
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 
 .item__title {

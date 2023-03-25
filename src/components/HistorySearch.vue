@@ -3,6 +3,7 @@ import ModelComponent from './ModelComponent.vue';
 
 const props = defineProps({
   setOpenModal: { type: Function, required: true },
+  selectElement: { type: Function, required: true },
 });
 
 const histories = JSON.parse(
@@ -16,7 +17,7 @@ const histories = JSON.parse(
     <hr />
     <template #content>
       <div v-for="history in histories">
-        <div class="item">{{ history }}</div>
+        <div class="item" @click="selectElement(history)">{{ history }}</div>
       </div>
     </template>
   </ModelComponent>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { provide, ref, watchEffect } from 'vue';
 
 import type { fetchWikipedia } from './types/fetchWikipedia';
 
@@ -10,6 +10,7 @@ import HistorySearch from './components/HistorySearch.vue';
 const wikipedias = ref<fetchWikipedia[]>([]);
 const isHistory = ref(false);
 const openModal = ref(false);
+const textElement = ref('');
 
 const setWikipedias = (value: fetchWikipedia[]) => {
   wikipedias.value = value;
@@ -24,7 +25,15 @@ const setOpenModal = () => {
   openModal.value = false;
 };
 
+const selectElement = (value: string) => {
+  textElement.value = value;
+  openModal.value = false;
+};
+
 getHistoryLocalStorage();
+
+provide('textElement', textElement);
+provide('getHistoryLocalStorage', getHistoryLocalStorage);
 </script>
 
 <template>
@@ -40,7 +49,10 @@ getHistoryLocalStorage();
           Historial
         </button>
       </div>
-      <SearchComponent :setWikipedias="setWikipedias" />
+      <SearchComponent
+        :setWikipedias="setWikipedias"
+        :textElement="textElement"
+      />
       <div v-if="wikipedias.length !== 0" class="content__list">
         <ItemComponent
           v-for="wikipedia in wikipedias"
@@ -52,7 +64,10 @@ getHistoryLocalStorage();
   </div>
   <div v-if="openModal">
     <Teleport to="#modal">
-      <HistorySearch :setOpenModal="setOpenModal" />
+      <HistorySearch
+        :setOpenModal="setOpenModal"
+        :selectElement="selectElement"
+      />
     </Teleport>
   </div>
 </template>
