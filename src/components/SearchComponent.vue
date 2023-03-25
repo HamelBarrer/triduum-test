@@ -13,6 +13,14 @@ const inputSearch = ref('');
 const handleSubmit = async () => {
   const data = await apiService.fetchSearch(inputSearch.value);
   props.setWikipedias(data);
+
+  const histories = localStorage.getItem('histories');
+  const history = !histories ? [] : JSON.parse(histories);
+  history.push(inputSearch.value);
+
+  localStorage.setItem('histories', JSON.stringify(history));
+
+  inputSearch.value = '';
 };
 </script>
 

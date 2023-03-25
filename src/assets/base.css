@@ -27,10 +27,17 @@ body {
 }
 
 .content {
+  position: relative;
   padding: 1rem;
   background-color: #fff;
   border-radius: 1rem;
   width: 20rem;
+}
+
+.content__list {
+  overflow: auto;
+  scrollbar-width: thin;
+  height: 30rem;
 }
 
 @media (min-width: 720px) {
