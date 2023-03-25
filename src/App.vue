@@ -8,12 +8,15 @@ import SearchComponent from './components/SearchComponent.vue';
 import HistorySearch from './components/HistorySearch.vue';
 
 const wikipedias = ref<fetchWikipedia[]>([]);
+const filterWikipedias = ref<fetchWikipedia[]>([]);
 const isHistory = ref(false);
 const openModal = ref(false);
 const textElement = ref('');
+const textFilterWiki = ref('');
 
 const setWikipedias = (value: fetchWikipedia[]) => {
   wikipedias.value = value;
+  filterWikipedias.value = value;
 };
 
 const getHistoryLocalStorage = () => {
@@ -28,6 +31,18 @@ const setOpenModal = () => {
 const selectElement = (value: string) => {
   textElement.value = value;
   openModal.value = false;
+};
+
+const filterData = () => {
+  filterWikipedias.value = wikipedias.value.filter(
+    (wikipedia) =>
+      wikipedia.title
+        .toLocaleLowerCase()
+        .includes(textFilterWiki.value.toLocaleLowerCase()) ||
+      wikipedia.pageid
+        .toString()
+        .includes(textFilterWiki.value.toLocaleLowerCase())
+  );
 };
 
 getHistoryLocalStorage();
@@ -54,8 +69,17 @@ provide('getHistoryLocalStorage', getHistoryLocalStorage);
         :textElement="textElement"
       />
       <div v-if="wikipedias.length !== 0" class="content__list">
+        <form>
+          <input
+            type="text"
+            class="input"
+            placeholder="Filtrar por titulo o id"
+            @input="filterData"
+            v-model="textFilterWiki"
+          />
+        </form>
         <ItemComponent
-          v-for="wikipedia in wikipedias"
+          v-for="wikipedia in filterWikipedias"
           :key="wikipedia.pageid"
           :wiki="wikipedia"
         />
@@ -87,6 +111,13 @@ provide('getHistoryLocalStorage', getHistoryLocalStorage);
   color: #fff;
   padding: 0.5rem;
   border-radius: 0.3rem;
+  font-weight: 600;
+}
+
+.input {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
   font-weight: 600;
 }
 </style>
